@@ -22,6 +22,30 @@ const BinDetails = () => {
 	const [detailLoading, setDetailLoading] = useState(false);
 	const [detailError, setDetailError] = useState(null);
 	const [copied, setCopied] = useState(false);
+	const [responseStatus, setResponseStatus] = useState(200);
+	const [statusInput, setStatusInput] = useState("200");
+	const [statusMessage, setStatusMessage] = useState(null);
+
+	useEffect(() => {
+		binService.getResponseConfig(endpoint)
+			.then((data) => {
+				setResponseStatus(data.responseStatus);
+				setStatusInput(String(data.responseStatus));
+			})
+			.catch(() => setStatusMessage("Failed to load response status."));
+	}, [endpoint]);
+
+	const saveResponseStatus = async (e) => {
+		e.preventDefault();
+		setStatusMessage(null);
+		try {
+			const data = await binService.setResponseStatus(endpoint, Number(statusInput));
+			setResponseStatus(data.responseStatus);
+			setStatusMessage("Saved.");
+		} catch (err) {
+			setStatusMessage(err.response?.data?.error || "Failed to save response status.");
+		}
+	};
 
 	useEffect(() => {
 		setLoading(true);
@@ -100,6 +124,18 @@ const BinDetails = () => {
 								</button>
 							</div>
 							<span className="bin-details__endpoint">{endpoint}</span>
+							<form className="bin-details__status-form" onSubmit={saveResponseStatus}>
+								<label>
+									Capture response status (current: {responseStatus})
+									<input
+										type="number"
+										value={statusInput}
+										onChange={(e) => setStatusInput(e.target.value)}
+									/>
+								</label>
+								<button className="bin-details__button" type="submit">Save</button>
+								{statusMessage && <span>{statusMessage}</span>}
+							</form>
 						</div>
 					</div>
 

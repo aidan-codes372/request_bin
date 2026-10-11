@@ -39,7 +39,21 @@ async function createBin(userId, binName) {
   return result.rows[0];
 }
 
+async function updateResponseStatus(binId, responseStatus) {
+  const pool = getPool();
+
+  const query = {
+    name: 'update bin response status',
+    text: 'UPDATE bins SET response_status = $1 WHERE id = $2 RETURNING *',
+    values: [responseStatus, binId],
+  };
+
+  const result = await pool.query(query);
+  return result.rows[0];
+}
+
 module.exports = {
+  updateResponseStatus,
   findBinsByUserId,
   findBinByName,
   createBin,
