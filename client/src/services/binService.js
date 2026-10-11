@@ -27,7 +27,21 @@ async function getRequestById(endpoint, requestId) {
   return request.data;
 }
 
+async function getResponseConfig(endpoint) {
+  const config = await axios.get(`${baseURL}/${endpoint}/response-config`);
+  return config.data;
+}
+
+async function setResponseStatus(endpoint, responseStatus) {
+  const config = await axios.put(`${baseURL}/${endpoint}/response-config`, {
+    response_status: responseStatus,
+  });
+  return config.data;
+}
+
 export default {
+  getResponseConfig,
+  setResponseStatus,
   getAllBins,
   postBin,
   getAllRequests,

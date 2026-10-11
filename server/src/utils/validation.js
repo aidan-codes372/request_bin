@@ -22,6 +22,21 @@ async function validateEndpoint(endpoint) {
     return true
 }
 
+const MIN_STATUS = 100
+const MAX_STATUS = 999
+
+function validateResponseStatus(status) {
+    if (status === undefined || status === null) {
+        throw new ValidationError('Missing response_status')
+    } else if (!Number.isInteger(Number(status))) {
+        throw new ValidationError('response_status must be an integer')
+    } else if (Number(status) < MIN_STATUS || Number(status) > MAX_STATUS) {
+        throw new ValidationError('response_status must be a valid HTTP status code')
+    }
+
+    return Number(status)
+}
+
 function hasValidChars(str) {
     return /^[a-zA-Z0-9_-]+$/.test(str)
 }
@@ -32,5 +47,6 @@ async function isUnique(endpoint) {
 }
 
 module.exports = {
-    validateEndpoint
+    validateEndpoint,
+    validateResponseStatus
 }

@@ -7,7 +7,7 @@ async function recordRequest(req, res) {
 
   try {
     const binResult = await pool.query(
-      'SELECT id FROM bins WHERE bin_name = $1',
+      'SELECT id, response_status FROM bins WHERE bin_name = $1',
       [bin_name],
     );
 
@@ -16,6 +16,7 @@ async function recordRequest(req, res) {
     }
 
     const binId = binResult.rows[0].id;
+    const responseStatus = binResult.rows[0].response_status;
 
     const idResult = await pool.query(
       "SELECT nextval('requests_id_seq') AS id",
@@ -66,7 +67,7 @@ async function recordRequest(req, res) {
       received_at: receivedAt,
     });
 
-    res.status(200).json({ received: true });
+    res.status(responseStatus).json({ received: true });
   } catch (err) {
     console.error('Error capturing request:', err);
     res.sendStatus(500);

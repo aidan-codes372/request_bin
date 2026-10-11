@@ -11,7 +11,8 @@ CREATE TABLE bins (
 		REFERENCES users(id) ON DELETE CASCADE,
 	bin_name VARCHAR(50) UNIQUE NOT NULL,
 	created_at TIMESTAMP DEFAULT NOW(),
-	request_count INT NOT NULL DEFAULT 0
+	request_count INT NOT NULL DEFAULT 0,
+	response_status INT NOT NULL DEFAULT 200
 );
 
 CREATE TABLE requests (
