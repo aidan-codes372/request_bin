@@ -26,7 +26,16 @@ class AuthorizationError extends Error {
     }
 }
 
+class DestinationBlockedError extends Error {
+    constructor(message) {
+        super(message)
+        this.name = "DestinationBlockedError"
+        this.code = "DESTINATION_BLOCKED"
+    }
+}
+
 module.exports = {
+    DestinationBlockedError,
     NotFoundError,
     ValidationError,
     AuthorizationError,
